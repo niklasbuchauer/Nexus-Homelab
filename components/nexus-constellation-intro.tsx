@@ -44,7 +44,7 @@ export default function NexusConstellationIntro() {
     <AnimatePresence>
       {showConstellation ? (
         <motion.div
-          className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-transparent"
+          className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-black/60 transition-opacity duration-500"
           role="button"
           tabIndex={0}
           aria-label="Dismiss NEXUS constellation intro"
@@ -60,8 +60,8 @@ export default function NexusConstellationIntro() {
           }}
         >
           <motion.svg
-            className="h-auto w-[min(92vw,760px)]"
-            viewBox="0 0 720 720"
+            className="h-auto w-[min(96vw,860px)] overflow-visible"
+            viewBox="-40 0 800 720"
             preserveAspectRatio="xMidYMid meet"
             aria-hidden="true"
             shapeRendering="crispEdges"
@@ -99,20 +99,20 @@ export default function NexusConstellationIntro() {
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 2.5, delay: index * 0.07, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: index * 0.07, ease: "easeOut" }}
                   />
                   <motion.path
                     d={path}
                     fill="none"
-                    className="drop-shadow-[0_0_8px_rgba(241,46,84,0.9)]"
+                    className="drop-shadow-[0_0_15px_rgba(241,46,84,0.7)]"
                     stroke="#f12e54"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 2.5, delay: index * 0.07, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: index * 0.07, ease: "easeOut" }}
                   />
                 </React.Fragment>
               ))}
@@ -127,20 +127,20 @@ export default function NexusConstellationIntro() {
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 2.5, delay: 0.3 + index * 0.025, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.3 + index * 0.025, ease: "easeOut" }}
                   />
                   <motion.path
                     d={path}
                     fill="none"
-                    className="drop-shadow-[0_0_8px_rgba(241,46,84,0.9)]"
+                    className="drop-shadow-[0_0_15px_rgba(241,46,84,0.7)]"
                     stroke="#f12e54"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 2.5, delay: 0.3 + index * 0.025, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.3 + index * 0.025, ease: "easeOut" }}
                   />
                 </React.Fragment>
               ))}
@@ -156,12 +156,13 @@ export default function NexusConstellationIntro() {
                   vectorEffect="non-scaling-stroke"
                   initial={{ opacity: 0, pathLength: 0 }}
                   animate={{
-                    opacity: [0, 1, 0.8],
+                    opacity: 1,
                     pathLength: 1,
                   }}
                   transition={{
-                    opacity: { duration: 1.8 + (index % 4) * 0.25, delay: index * 0.035, repeat: Infinity },
-                    pathLength: { duration: 0.25, delay: index * 0.035 },
+                    duration: 1,
+                    delay: index * 0.035,
+                    ease: "easeOut",
                   }}
                 />
               ))}
