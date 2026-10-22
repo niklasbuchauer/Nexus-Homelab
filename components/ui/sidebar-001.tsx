@@ -141,10 +141,8 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
     <div className="relative">
       {isActive ? (
         <motion.span
-          layoutId="sidebar-001-active-bar"
-          className="pointer-events-none absolute left-1 top-1/2 z-10 h-0.5 -translate-y-1/2 rounded-full bg-accent-pro"
-          animate={{ width: 23 }}
-          transition={{ type: "spring", stiffness: 800, damping: 40 }}
+          layoutId="sb001-active-bar"
+          className="pointer-events-none absolute left-[4px] top-1/2 z-10 h-[1.8px] w-[23px] -translate-y-1/2 rounded-full bg-accent-pro"
         />
       ) : null}
       <motion.span
