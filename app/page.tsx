@@ -4,6 +4,7 @@ import { useState } from "react"
 import NebulaSidebar from "@/components/nebula-sidebar"
 import NexusConstellationIntro from "@/components/nexus-constellation-intro"
 import HalftoneNebula from "@/components/ui/halftone-nebula"
+import { THEME_CONFIG } from "@/src/config/theme"
 
 export default function Home() {
   const [activeItem, setActiveItem] = useState("Home")
@@ -14,7 +15,12 @@ export default function Home() {
         <HalftoneNebula
           height="100vh"
           preset="crimson"
-          params={{ sparkles: 10, bandAngle: 0.9, haze: 0.9 }}
+          params={{
+            sparkles: THEME_CONFIG.background.starDensity,
+            pixel: THEME_CONFIG.background.gridPixelSize,
+            bandAngle: 0.9,
+            haze: THEME_CONFIG.background.nebulaOpacity,
+          }}
           touch="draw"
           className="!fixed inset-0 z-0 h-screen w-full"
         />

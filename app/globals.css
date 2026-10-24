@@ -2,11 +2,11 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --border: #e6e6e6;
-  --accent: #f4f4f5;
-  --accent-pro: #f12e54;
+  --background: var(--theme-dark-bg, #ffffff);
+  --foreground: var(--theme-glow, #171717);
+  --border: var(--theme-secondary, #e6e6e6);
+  --accent: var(--theme-secondary, #f4f4f5);
+  --accent-pro: var(--theme-primary, #f12e54);
 }
 
 @theme inline {
@@ -21,15 +21,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --border: #2a2a2a;
-    --accent: #1b1b1b;
+    --background: var(--theme-dark-bg, #0a0a0a);
+    --foreground: var(--theme-glow, #ededed);
+    --border: var(--theme-secondary, #2a2a2a);
+    --accent: var(--theme-secondary, #1b1b1b);
   }
 }
 
 .dark {
-  --accent-pro: #f12e54;
+  --accent-pro: var(--theme-primary, #f12e54);
 }
 
 body {
@@ -62,11 +62,14 @@ body {
   place-items: center;
   transform: translateY(-3rem);
   pointer-events: none;
-  --nexus-deep-crimson: #750820;
-  --nexus-rich-red: #a60932;
-  --nexus-primary-red: #f01449;
-  --nexus-bright-red: #ff285f;
-  --nexus-magenta: #ff3d83;
+  --nexus-deep-crimson: var(--theme-secondary);
+  --nexus-rich-red: var(--theme-secondary);
+  --nexus-primary-red: var(--theme-primary);
+  --nexus-bright-red: var(--theme-glow);
+  --nexus-magenta: var(--theme-accent);
+  --nexus-glow-radius: var(--theme-logo-glow-radius);
+  --nexus-idle-duration: var(--theme-logo-idle-duration);
+  --nexus-stroke-width: var(--theme-logo-stroke-width);
 }
 
 .nexus-mobile-navigation {
@@ -108,7 +111,9 @@ body {
   -webkit-mask: url("/nexus-logo.png") center / contain no-repeat;
   mask: url("/nexus-logo.png") center / contain no-repeat;
   filter: drop-shadow(0 0 5px rgba(240, 20, 73, .44)) drop-shadow(0 0 18px rgba(117, 8, 32, .38));
-  animation: nexus-logo-flow 8.5s ease-in-out 2.4s infinite, nexus-logo-aura 5.8s ease-in-out 2.4s infinite;
+  filter: drop-shadow(0 0 5px var(--nexus-primary-red)) drop-shadow(0 0 var(--nexus-glow-radius) var(--nexus-deep-crimson));
+  animation: nexus-logo-flow var(--nexus-idle-duration) ease-in-out 2.4s infinite, nexus-logo-aura 5.8s ease-in-out 2.4s infinite;
+    filter: drop-shadow(0 0 5px var(--nexus-bright-red));
   will-change: background-position, filter;
 }
 
@@ -127,7 +132,9 @@ body {
 .nexus-logo-orbit-track {
   fill: none;
   stroke: rgba(166, 9, 50, .2);
-  stroke-width: 1.1;
+  stroke: var(--nexus-rich-crimson);
+  stroke-width: var(--nexus-stroke-width);
+    background: linear-gradient(108deg, transparent 37%, color-mix(in srgb, var(--nexus-primary-red) 8%, transparent) 44%, var(--nexus-bright-red) 50%, color-mix(in srgb, var(--nexus-magenta) 64%, transparent) 54%, transparent 63%);
   stroke-dasharray: 2 8;
   stroke-linecap: round;
 }
@@ -172,8 +179,8 @@ body {
 }
 
 @keyframes nexus-logo-aura {
-  0%, 100% { filter: drop-shadow(0 0 5px rgba(240, 20, 73, .4)) drop-shadow(0 0 18px rgba(117, 8, 32, .32)); }
-  48% { filter: drop-shadow(0 0 8px rgba(255, 40, 95, .7)) drop-shadow(0 0 25px rgba(166, 9, 50, .42)); }
+  0%, 100% { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--nexus-primary-red) 40%, transparent)) drop-shadow(0 0 var(--nexus-glow-radius) color-mix(in srgb, var(--nexus-deep-crimson) 32%, transparent)); }
+  48% { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--nexus-bright-red) 70%, transparent)) drop-shadow(0 0 calc(var(--nexus-glow-radius) + 5px) color-mix(in srgb, var(--nexus-rich-red) 42%, transparent)); }
 }
 
 @keyframes nexus-logo-orbit-awaken {
@@ -208,11 +215,11 @@ body {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     min-height: 64px;
     padding: 7px 5px max(7px, env(safe-area-inset-bottom));
-    border: 1px solid rgba(240, 20, 73, .24);
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 24%, transparent);
     border-radius: 18px;
-    background: linear-gradient(135deg, rgba(7, 3, 10, .88), rgba(46, 5, 19, .82));
-    box-shadow: 0 8px 30px rgba(0, 0, 0, .42), 0 0 24px rgba(117, 8, 32, .2);
-    backdrop-filter: blur(18px) saturate(1.15);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--theme-dark-bg) 88%, transparent), color-mix(in srgb, var(--theme-secondary) 35%, var(--theme-dark-bg)));
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .42), 0 0 24px color-mix(in srgb, var(--theme-secondary) 20%, transparent);
+    backdrop-filter: blur(var(--theme-sidebar-blur, 18px)) saturate(1.15);
   }
 
   .nexus-mobile-bar a,
@@ -227,7 +234,7 @@ body {
     border: 0;
     border-radius: 12px;
     background: transparent;
-    color: rgba(255, 225, 234, .58);
+    color: color-mix(in srgb, var(--theme-glow) 58%, transparent);
     cursor: pointer;
     flex-direction: column;
     font: inherit;
@@ -242,8 +249,8 @@ body {
     width: 20px;
     height: 2px;
     border-radius: 999px;
-    background: var(--accent-pro);
-    box-shadow: 0 0 11px rgba(240, 20, 73, .7);
+    background: var(--theme-primary);
+    box-shadow: 0 0 11px color-mix(in srgb, var(--theme-primary) 70%, transparent);
     content: "";
     opacity: 0;
     transform: scaleX(.5);
@@ -266,7 +273,7 @@ body {
 
   .nexus-mobile-bar a.is-active,
   .nexus-mobile-bar button.is-active {
-    color: #ff5b83;
+    color: var(--theme-glow);
   }
 
   .nexus-mobile-bar a.is-active::before,

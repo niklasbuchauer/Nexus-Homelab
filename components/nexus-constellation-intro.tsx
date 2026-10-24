@@ -1,9 +1,20 @@
 import Image from "next/image"
+import { THEME_CONFIG } from "@/src/config/theme"
 
 export default function NexusConstellationIntro() {
+  const logoStyle: React.CSSProperties = {
+    "--nexus-primary-red": THEME_CONFIG.colors.primary,
+    "--nexus-deep-crimson": THEME_CONFIG.colors.secondary,
+    "--nexus-bright-red": THEME_CONFIG.colors.glow,
+    "--nexus-magenta": THEME_CONFIG.colors.accent,
+    "--nexus-glow-radius": `${THEME_CONFIG.logo.glowRadius}px`,
+    "--nexus-idle-duration": `${THEME_CONFIG.logo.idleAnimationSpeed}s`,
+    "--nexus-stroke-width": THEME_CONFIG.logo.strokeWidth,
+  } as React.CSSProperties;
+
   return (
     <div className="nexus-logo-stage" aria-label="NEXUS">
-      <div className="nexus-logo-reveal">
+      <div className="nexus-logo-reveal" style={logoStyle}>
         <Image
           className="nexus-logo-art"
           src="/nexus-logo.png"

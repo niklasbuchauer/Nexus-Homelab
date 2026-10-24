@@ -4,6 +4,7 @@ import * as React from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { THEME_CONFIG } from "@/src/config/theme"
 
 const MotionChevron = motion.create(ChevronRight)
 const EFFECTS_KEY = "sidebar-001-effects"
@@ -143,6 +144,7 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
         <motion.span
           layoutId="sb001-active-bar"
           className="pointer-events-none absolute left-[4px] top-1/2 z-10 h-[1.8px] w-[23px] -translate-y-1/2 rounded-full bg-accent-pro"
+          style={{ backgroundColor: THEME_CONFIG.sidebar.activeIndicatorColor }}
         />
       ) : null}
       <motion.span
@@ -163,6 +165,7 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
           onClick={onClick}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={() => setHovered(null)}
+          style={isActive ? { color: THEME_CONFIG.colors.primary } : undefined}
           className={cn("relative z-[1] ml-2 flex select-none items-center gap-2 py-1.5 pl-4 text-sm", className)}
         >
           <span className="truncate">{label}</span>
@@ -303,6 +306,7 @@ export function Sidebar001({
             "fixed left-6 top-1/2 z-50 flex h-auto max-h-[80vh] w-60 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-4 shadow-2xl backdrop-blur-md",
             className,
           )}
+          style={{ backdropFilter: `blur(${THEME_CONFIG.sidebar.blurAmount}px)` }}
         >
           {children}
         </aside>

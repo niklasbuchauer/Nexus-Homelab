@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { THEME_CONFIG } from "@/src/config/theme"
 
 export type NebulaParams = {
   pixel: number
@@ -46,7 +47,9 @@ export type NebulaParams = {
 }
 
 export const NEBULA_DEFAULTS: NebulaParams = {
-  pixel: 6,
+  pixel: THEME_CONFIG.background.gridPixelSize,
+  stars: THEME_CONFIG.background.starDensity / 10,
+  haze: THEME_CONFIG.background.nebulaOpacity,
   dotMin: 0.12,
   dotMax: 0.56,
   levels: 7,
@@ -60,8 +63,6 @@ export const NEBULA_DEFAULTS: NebulaParams = {
   bandAngle: 1.05,
   bandOffset: 0.42,
   bandWidth: 0.34,
-  haze: 0.8,
-  stars: 1,
   twinkle: 1.4,
   starDrift: 1.2,
   sparkles: 9,
@@ -79,13 +80,13 @@ export const NEBULA_DEFAULTS: NebulaParams = {
   speed: 1,
   vignette: 0.5,
   grain: 0.035,
-  voidColor: "#050309",
-  hazeColor: "#161a38",
-  duskColor: "#3b1646",
-  wineColor: "#5c0d31",
-  crimsonColor: "#c01245",
-  hotColor: "#ff1f5a",
-  starColor: "#f6e2e8",
+  voidColor: THEME_CONFIG.colors.darkBg,
+  hazeColor: THEME_CONFIG.colors.secondary,
+  duskColor: THEME_CONFIG.colors.secondary,
+  wineColor: THEME_CONFIG.colors.secondary,
+  crimsonColor: THEME_CONFIG.colors.primary,
+  hotColor: THEME_CONFIG.colors.primary,
+  starColor: THEME_CONFIG.colors.primary,
 }
 
 export const NEBULA_PRESETS: Record<string, Partial<NebulaParams>> = {
