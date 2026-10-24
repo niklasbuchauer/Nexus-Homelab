@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   Sidebar001,
   Sidebar001Content,
@@ -8,9 +7,12 @@ import {
   Sidebar001Section,
 } from "@/components/ui/sidebar-001"
 
-export default function NebulaSidebar() {
-  const [activeItem, setActiveItem] = useState("Home")
+type NebulaSidebarProps = {
+  activeItem: string
+  onActiveItemChange: (item: string) => void
+}
 
+export default function NebulaSidebar({ activeItem, onActiveItemChange }: NebulaSidebarProps) {
   return (
     <Sidebar001>
       <Sidebar001Content>
@@ -21,7 +23,7 @@ export default function NebulaSidebar() {
             isActive={activeItem === "Home"}
             onClick={(event) => {
               event.preventDefault()
-              setActiveItem("Home")
+              onActiveItemChange("Home")
             }}
           />
           <Sidebar001Item
@@ -30,7 +32,7 @@ export default function NebulaSidebar() {
             isActive={activeItem === "Explore"}
             onClick={(event) => {
               event.preventDefault()
-              setActiveItem("Explore")
+              onActiveItemChange("Explore")
             }}
           />
           <Sidebar001Item
@@ -39,7 +41,7 @@ export default function NebulaSidebar() {
             isActive={activeItem === "Projects"}
             onClick={(event) => {
               event.preventDefault()
-              setActiveItem("Projects")
+              onActiveItemChange("Projects")
             }}
           />
           <Sidebar001Item
@@ -48,7 +50,7 @@ export default function NebulaSidebar() {
             isActive={activeItem === "About Me"}
             onClick={(event) => {
               event.preventDefault()
-              setActiveItem("About Me")
+              onActiveItemChange("About Me")
             }}
           />
         </Sidebar001Section>
@@ -59,7 +61,7 @@ export default function NebulaSidebar() {
             isActive={activeItem === "Preferences"}
             onClick={(event) => {
               event.preventDefault()
-              setActiveItem("Preferences")
+              onActiveItemChange("Preferences")
             }}
           />
           <Sidebar001Item
@@ -68,7 +70,7 @@ export default function NebulaSidebar() {
             isActive={activeItem === "Contact"}
             onClick={(event) => {
               event.preventDefault()
-              setActiveItem("Contact")
+              onActiveItemChange("Contact")
             }}
           />
         </Sidebar001Section>

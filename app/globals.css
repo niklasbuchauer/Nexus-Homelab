@@ -53,3 +53,150 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.nexus-logo-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  transform: translateY(-3rem);
+  pointer-events: none;
+  --nexus-deep-crimson: #750820;
+  --nexus-rich-red: #a60932;
+  --nexus-primary-red: #f01449;
+  --nexus-bright-red: #ff285f;
+  --nexus-magenta: #ff3d83;
+}
+
+.nexus-logo-reveal {
+  position: relative;
+  width: min(72vw, 610px);
+  aspect-ratio: 578 / 314;
+  opacity: 0;
+  clip-path: inset(0 50% 0 50%);
+  transform: scale(.965);
+  filter: blur(12px);
+  animation: nexus-logo-arrive 2.05s cubic-bezier(.16, 1, .3, 1) .16s forwards;
+}
+
+.nexus-logo-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
+
+.nexus-logo-colored {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(108deg,
+    var(--nexus-deep-crimson) 0%,
+    var(--nexus-rich-red) 19%,
+    var(--nexus-primary-red) 38%,
+    var(--nexus-bright-red) 50%,
+    var(--nexus-rich-red) 67%,
+    var(--nexus-primary-red) 82%,
+    var(--nexus-deep-crimson) 100%);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-mask: url("/nexus-logo.png") center / contain no-repeat;
+  mask: url("/nexus-logo.png") center / contain no-repeat;
+  filter: drop-shadow(0 0 5px rgba(240, 20, 73, .44)) drop-shadow(0 0 18px rgba(117, 8, 32, .38));
+  animation: nexus-logo-flow 8.5s ease-in-out 2.4s infinite, nexus-logo-aura 5.8s ease-in-out 2.4s infinite;
+  will-change: background-position, filter;
+}
+
+.nexus-logo-orbit {
+  position: absolute;
+  inset: -3.5% -2.5% -2.5%;
+  width: 105%;
+  height: 106%;
+  overflow: visible;
+  opacity: .94;
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px rgba(255, 40, 95, .78));
+  animation: nexus-logo-orbit-awaken .8s ease-out 1.9s both;
+}
+
+.nexus-logo-orbit-track {
+  fill: none;
+  stroke: rgba(166, 9, 50, .2);
+  stroke-width: 1.1;
+  stroke-dasharray: 2 8;
+  stroke-linecap: round;
+}
+
+.nexus-logo-orbit-runner {
+  fill: var(--nexus-bright-red);
+}
+
+.nexus-logo-orbit-runner-soft {
+  fill: var(--nexus-magenta);
+  opacity: .78;
+}
+
+.nexus-logo-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(108deg, transparent 37%, rgba(240, 20, 73, .08) 44%, rgba(255, 40, 95, .9) 50%, rgba(255, 61, 131, .64) 54%, transparent 63%);
+  -webkit-mask: url("/nexus-logo.png") center / contain no-repeat;
+  mask: url("/nexus-logo.png") center / contain no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateX(-110%);
+  animation: nexus-logo-sweep 1.15s cubic-bezier(.2, .7, .2, 1) 1.05s both;
+}
+
+@keyframes nexus-logo-arrive {
+  0% { opacity: 0; clip-path: inset(0 50% 0 50%); transform: scale(.965); filter: blur(12px); }
+  37% { opacity: 1; filter: blur(3px); }
+  72% { clip-path: inset(0 3% 0 3%); filter: blur(.4px); }
+  100% { opacity: 1; clip-path: inset(0); transform: scale(1); filter: blur(0); }
+}
+
+@keyframes nexus-logo-sweep {
+  0% { opacity: 0; transform: translateX(-110%); }
+  18% { opacity: .9; }
+  100% { opacity: 0; transform: translateX(110%); }
+}
+
+@keyframes nexus-logo-flow {
+  0%, 100% { background-position: 0% 50%; }
+  45%, 60% { background-position: 100% 50%; }
+}
+
+@keyframes nexus-logo-aura {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(240, 20, 73, .4)) drop-shadow(0 0 18px rgba(117, 8, 32, .32)); }
+  48% { filter: drop-shadow(0 0 8px rgba(255, 40, 95, .7)) drop-shadow(0 0 25px rgba(166, 9, 50, .42)); }
+}
+
+@keyframes nexus-logo-orbit-awaken {
+  from { opacity: 0; }
+  to { opacity: .94; }
+}
+
+@media (max-width: 700px) {
+  .nexus-logo-stage { transform: translateY(-2rem); }
+  .nexus-logo-reveal { width: min(78vw, 470px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexus-logo-reveal {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+
+  .nexus-logo-colored {
+    background-position: 50% 50%;
+    filter: drop-shadow(0 0 7px rgba(240, 20, 73, .48));
+    animation: none;
+  }
+  .nexus-logo-orbit { display: none; }
+  .nexus-logo-art { animation: none; }
+  .nexus-logo-sweep { display: none; }
+}

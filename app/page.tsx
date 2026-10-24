@@ -1,8 +1,13 @@
+"use client"
+
+import { useState } from "react"
 import NebulaSidebar from "@/components/nebula-sidebar"
 import NexusConstellationIntro from "@/components/nexus-constellation-intro"
 import HalftoneNebula from "@/components/ui/halftone-nebula"
 
 export default function Home() {
+  const [activeItem, setActiveItem] = useState("Home")
+
   return (
     <>
       <main className="relative h-screen w-full overflow-hidden">
@@ -14,8 +19,8 @@ export default function Home() {
           className="!fixed inset-0 z-0 h-screen w-full"
         />
       </main>
-      <NebulaSidebar />
-      <NexusConstellationIntro />
+      <NebulaSidebar activeItem={activeItem} onActiveItemChange={setActiveItem} />
+      {activeItem === "Home" ? <NexusConstellationIntro /> : null}
     </>
   )
 }
