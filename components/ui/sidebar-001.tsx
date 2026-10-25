@@ -124,7 +124,7 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
   const isHovered = hovered === href
   const opacity = isActive ? 1 : hovered !== null ? (isHovered ? 1 : 0.7) : 1
 
-  const handleMouseEnter = () => {
+  const handleInteractionStart = () => {
     const item = itemRef.current
     const container = containerRef.current
     if (!item || !container) return setHovered(href)
@@ -135,6 +135,10 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
       height: itemRect.height,
       left: 25,
     })
+  }
+
+  const handleInteractionEnd = (event: React.PointerEvent) => {
+    if (event.pointerType !== "mouse") setHovered(null)
   }
 
   return (
@@ -162,8 +166,13 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
         <a
           href={href}
           onClick={onClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={() => setHovered(null)}
+          onPointerEnter={handleInteractionStart}
+          onPointerDown={handleInteractionStart}
+          onPointerLeave={() => setHovered(null)}
+          onPointerUp={handleInteractionEnd}
+          onPointerCancel={() => setHovered(null)}
+          onFocus={handleInteractionStart}
+          onBlur={() => setHovered(null)}
           className={cn(
             "relative z-[1] ml-2 flex select-none items-center gap-2 py-1.5 pl-4 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] transition-colors",
             isActive ? "font-medium text-white" : "text-white/70 hover:text-white",
@@ -206,7 +215,7 @@ export function Sidebar001Group({
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const { setHovered, containerRef } = React.useContext(HoverContext)
 
-  const onMouseEnter = () => {
+  const handleInteractionStart = () => {
     const button = buttonRef.current
     const container = containerRef.current
     if (!button || !container) return setHovered(id)
@@ -215,14 +224,23 @@ export function Sidebar001Group({
     setHovered(id, { top: buttonRect.top - containerRect.top, height: buttonRect.height, left: 0 })
   }
 
+  const handleInteractionEnd = (event: React.PointerEvent) => {
+    if (event.pointerType !== "mouse") setHovered(null)
+  }
+
   return (
     <div className={cn("flex flex-col", className)}>
       <button
         ref={buttonRef}
         type="button"
         onClick={() => setIsOpen((open) => !open)}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={() => setHovered(null)}
+        onPointerEnter={handleInteractionStart}
+        onPointerDown={handleInteractionStart}
+        onPointerLeave={() => setHovered(null)}
+        onPointerUp={handleInteractionEnd}
+        onPointerCancel={() => setHovered(null)}
+        onFocus={handleInteractionStart}
+        onBlur={() => setHovered(null)}
         className="group relative z-[1] flex w-full select-none items-center gap-1.5 py-1.5 pr-2 text-left drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
       >
         {icon ? <span className="shrink-0 text-white/40 [&_svg]:size-3.5">{icon}</span> : null}
