@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import type { CSSProperties } from "react";
+import { ThemeProvider } from "@/components/theme-provider";
 import { THEME_CONFIG } from "@/src/config/theme";
 import "./globals.css";
 
@@ -43,7 +44,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full overflow-hidden antialiased`}
       style={themeStyle}
     >
-      <body className="flex h-screen w-screen flex-col overflow-hidden">{children}</body>
+      <body className="flex h-screen w-screen flex-col overflow-hidden">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

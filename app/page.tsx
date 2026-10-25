@@ -3,6 +3,7 @@
 import { useState } from "react"
 import NebulaSidebar from "@/components/nebula-sidebar"
 import NexusConstellationIntro from "@/components/nexus-constellation-intro"
+import ThemeSelector from "@/components/theme-selector"
 import HalftoneNebula from "@/components/ui/halftone-nebula"
 import { THEME_CONFIG } from "@/src/config/theme"
 
@@ -26,6 +27,7 @@ export default function Home() {
         />
       </main>
       <NebulaSidebar activeItem={activeItem} onActiveItemChange={setActiveItem} />
+      <ThemeSelector />
       {activeItem === "Home" ? <NexusConstellationIntro /> : null}
     </>
   )

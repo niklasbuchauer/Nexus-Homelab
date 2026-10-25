@@ -31,7 +31,7 @@ export const PALETTE_OPTIONS = {
   },
 } as const
 
-const THEME_PRESETS = {
+export const THEME_PRESETS = {
   default: {
     primary: "#C06A86",          //default: #e63956
     secondary: "#6B334D",        //default: #78112c
@@ -79,7 +79,7 @@ const THEME_PRESETS = {
   },
 } as const
 
-const ACTIVE_THEME: keyof typeof THEME_PRESETS = "default"
+export const ACTIVE_THEME: keyof typeof THEME_PRESETS = "laserEmerald"
 const themeColors = THEME_PRESETS[ACTIVE_THEME]
 
 export const THEME_CONFIG = {
@@ -97,6 +97,26 @@ export const THEME_CONFIG = {
   sidebar: {
     activeIndicatorColor: themeColors.primary,
     blurAmount: 15,             //default: 15
+  },
+  planet: {
+    bottomRightSize: 100,       // default radius/size of the big planet
+    topRightSize: 75,           // size/radius of the new top-right planet
+  },
+  topRightPlanet: {
+    textureScale: 1.12,
+    textureSeed: 32,
+    brightness: 0.84,
+  },
+  satellite: {
+    enabled: true,
+    orbitRadius: 85,            // Distance from the top-right planet center
+    orbitSpeed: -0.5,           // Speed of the orbital revolution
+    tiltAngle: 10,              // Elliptical orbit inclination (degrees)
+    pixelScale: 1,              // Pixel grid snap size to match canvas halftone look
+  },                            // Small pixel size so it doesn't overpower the planet
+  clickStars: {
+    minSize: 7,                 // minimum random size for clicked stars
+    maxSize: 13,                // maximum random size for clicked stars
   },
 } as const
 

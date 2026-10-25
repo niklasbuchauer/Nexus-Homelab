@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { THEME_CONFIG } from "@/src/config/theme"
+import { useTheme } from "@/components/theme-provider"
 
 export type NebulaParams = {
   pixel: number
@@ -155,6 +156,7 @@ uniform vec4 uSpark[${MAX_SPARKS}];
 uniform vec4 uSparkB[${MAX_SPARKS}];
 uniform vec4 uRipple[${MAX_RIPPLES}];
 uniform vec4 uPlanet;
+uniform vec4 uPlanetTopRight;
 ${declare(UNIFORMS)}
 out vec4 frag;
 
@@ -241,6 +243,28 @@ vec3 field(vec2 pos, vec2 resCss){
   return vec3(clamp(d, 0.0, 1.0), hz, tone);
 }
 
+int satelliteRow(int row){
+  int rows[16] = int[16](0, 960, 384, 384, 61983, 61983, 61983, 65535, 65535, 65535, 65535, 61983, 61983, 384, 960, 0);
+  return rows[row];
+}
+
+float satelliteShape(vec2 matrixCell){
+  if (matrixCell.x < 0.0 || matrixCell.x >= 16.0 || matrixCell.y < 0.0 || matrixCell.y >= 16.0) return 0.0;
+  int bit = 15 - int(matrixCell.x);
+  return float((satelliteRow(int(matrixCell.y)) & (1 << bit)) != 0);
+}
+
+vec3 satellitePaint(vec2 matrixCell){
+  vec2 local = matrixCell - vec2(8.0);
+  float shape = satelliteShape(matrixCell);
+  float panel = step(4.0, abs(local.x)) * shape;
+  float panelGrid = max(step(1.0, mod(abs(local.x), 2.0)), step(1.0, mod(abs(local.y), 2.0))) * panel;
+  vec3 panelColor = mix(uCrimsonColor, uStarColor, 0.42);
+  vec3 bodyColor = mix(uHotColor, uStarColor, 0.52);
+  vec3 color = mix(bodyColor, panelColor, panel);
+  return mix(color, uVoidColor, panelGrid * 0.5) * shape;
+}
+
 void main(){
   vec2 resCss = uRes / uDpr;
   vec2 css = gl_FragCoord.xy / uDpr;
@@ -285,6 +309,23 @@ void main(){
   }
   col = mix(col, starAcc / max(starA, 1e-3), starA * (1.0 - g.x * 0.55));
 
+  float satelliteDepth = 0.0;
+  float satelliteMask = 0.0;
+  vec3 satelliteColor = vec3(0.0);
+  if (${THEME_CONFIG.satellite.enabled ? 1 : 0} == 1) {
+    float satelliteAngle = uTime * ${THEME_CONFIG.satellite.orbitSpeed};
+    float satelliteTilt = radians(${THEME_CONFIG.satellite.tiltAngle}.0);
+    vec2 orbit = vec2(cos(satelliteAngle), sin(satelliteAngle) * 0.58) * ${THEME_CONFIG.satellite.orbitRadius}.0;
+    orbit = vec2(orbit.x * cos(satelliteTilt) - orbit.y * sin(satelliteTilt), orbit.x * sin(satelliteTilt) + orbit.y * cos(satelliteTilt));
+    vec2 satelliteCenter = uPlanetTopRight.xy + orbit;
+    float satelliteUnit = ${THEME_CONFIG.satellite.pixelScale}.0;
+    vec2 satelliteCell = floor((cellC - satelliteCenter) / satelliteUnit) + vec2(8.0);
+    satelliteMask = satelliteShape(satelliteCell);
+    satelliteColor = satellitePaint(satelliteCell);
+    satelliteDepth = sin(satelliteAngle);
+    if (satelliteDepth < 0.0) col = mix(col, satelliteColor, satelliteMask);
+  }
+
   if (uPlanet.w > 0.5) {
     vec2 pc = uPlanet.xy + shift(0.8);
     float R = uPlanet.z;
@@ -302,6 +343,27 @@ void main(){
       col = mix(pbg, pdot, step(length(f), pr));
     }
   }
+
+  if (uPlanetTopRight.w > 0.5) {
+    vec2 pc = uPlanetTopRight.xy + shift(0.8);
+    float R = uPlanetTopRight.z;
+    vec2 dc = cellC - pc;
+    if (length(dc) < R) {
+      vec2 n2 = dc / R;
+      float z = sqrt(max(1.0 - dot(n2, n2), 0.0));
+      float lit = clamp(dot(vec3(n2, z), normalize(vec3(-0.45, 0.55, 0.7))), 0.0, 1.0);
+      float surf = fbm(vec2(n2.x * 1.4 + uTime * 0.015, n2.y * 4.2) * 1.6 * ${THEME_CONFIG.topRightPlanet.textureScale} + ${THEME_CONFIG.topRightPlanet.textureSeed}.0);
+      float pd = clamp(lit * 1.05 - smoothstep(0.55, 0.75, surf) * 0.45 * (1.0 - lit * 0.5) + 0.05, 0.0, 1.0);
+      float topDith = bayer4(cell + vec2(2.0, 1.0));
+      float pq = floor(pd * L + topDith) / L;
+      vec3 pbg = mix(mix(uVoidColor, uWineColor, 0.35), uWineColor, pq);
+      float pr = mix(0.2, 0.62, sqrt(pq));
+      vec3 pdot = ramp(min(pq * 0.85 + 0.25, 1.0), hazeCol);
+      col = mix(pbg, pdot, step(length(f), pr)) * ${THEME_CONFIG.topRightPlanet.brightness};
+    }
+  }
+
+  if (satelliteDepth >= 0.0) col = mix(col, satelliteColor, satelliteMask);
 
   vec2 sh = shift(1.2);
   for (int i = 0; i < ${MAX_SPARKS}; i++) {
@@ -435,6 +497,7 @@ export default function HalftoneNebula({
   children,
   className = "",
 }: HalftoneNebulaProps) {
+  const { colors } = useTheme()
   const rootRef = React.useRef<HTMLElement>(null)
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
   const [failed, setFailed] = React.useState(false)
@@ -450,8 +513,19 @@ export default function HalftoneNebula({
   }, [])
 
   const P = React.useMemo<NebulaParams>(
-    () => ({ ...NEBULA_DEFAULTS, ...(NEBULA_PRESETS[preset] ?? {}), ...(params ?? {}) }),
-    [preset, params],
+    () => ({
+      ...NEBULA_DEFAULTS,
+      ...(NEBULA_PRESETS[preset] ?? {}),
+      voidColor: colors.darkBg,
+      hazeColor: colors.secondary,
+      duskColor: colors.secondary,
+      wineColor: colors.secondary,
+      crimsonColor: colors.primary,
+      hotColor: colors.primary,
+      starColor: colors.primary,
+      ...(params ?? {}),
+    }),
+    [colors, params, preset],
   )
   const paramsRef = React.useRef(P)
   paramsRef.current = P
@@ -507,7 +581,7 @@ export default function HalftoneNebula({
       res: loc("uRes"), dpr: loc("uDpr"), time: loc("uTime"),
       pointer: loc("uPointer"), pointerOn: loc("uPointerOn"), look: loc("uLook"),
       sparkCount: loc("uSparkCount"), spark: loc("uSpark"), sparkB: loc("uSparkB"),
-      ripple: loc("uRipple"), planet: loc("uPlanet"),
+      ripple: loc("uRipple"), planet: loc("uPlanet"), planetTopRight: loc("uPlanetTopRight"),
     }
     const vao = gl.createVertexArray()
 
@@ -574,10 +648,11 @@ export default function HalftoneNebula({
       lastTouched = performance.now() / 1000
       const now = clock()
       const rand = Math.random()
+      const starSize = Math.random() * (THEME_CONFIG.clickStars.maxSize - THEME_CONFIG.clickStars.minSize) + THEME_CONFIG.clickStars.minSize
       sparks = pushSparkle(sparks, {
         x, y,
         reach: 0.045 + 0.08 * rand,
-        core: 0.006 + 0.008 * rand,
+        core: starSize / Math.max(Math.min(cssW, cssH), 1),
         tint: Math.random() < 0.2 ? 1 : 0,
         phase: Math.random() * 6.283,
         born: reduced ? now - 10 : now,
@@ -648,7 +723,8 @@ export default function HalftoneNebula({
       gl.uniform4fv(U.spark, sparkA)
       gl.uniform4fv(U.sparkB, sparkB)
       gl.uniform4fv(U.ripple, ripples)
-      gl.uniform4f(U.planet, p.planetX * cssW, p.planetY * cssH, p.planetRadius * minSide, p.planet ? 1 : 0)
+      gl.uniform4f(U.planet, p.planetX * cssW, p.planetY * cssH, THEME_CONFIG.planet.bottomRightSize, p.planet ? 1 : 0)
+      gl.uniform4f(U.planetTopRight, cssW * 0.85, cssH * 0.78, THEME_CONFIG.planet.topRightSize, p.planet ? 1 : 0)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
 

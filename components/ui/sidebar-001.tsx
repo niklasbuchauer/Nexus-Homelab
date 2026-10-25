@@ -4,7 +4,6 @@ import * as React from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { THEME_CONFIG } from "@/src/config/theme"
 
 const MotionChevron = motion.create(ChevronRight)
 const EFFECTS_KEY = "sidebar-001-effects"
@@ -123,7 +122,7 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
   const itemRef = React.useRef<HTMLDivElement>(null)
   const { hovered, setHovered, containerRef } = React.useContext(HoverContext)
   const isHovered = hovered === href
-  const opacity = isActive ? 1 : hovered !== null ? (isHovered ? 1 : 0.3) : 0.55
+  const opacity = isActive ? 1 : hovered !== null ? (isHovered ? 1 : 0.7) : 1
 
   const handleMouseEnter = () => {
     const item = itemRef.current
@@ -144,7 +143,7 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
         <motion.span
           layoutId="sb001-active-bar"
           className="pointer-events-none absolute left-[4px] top-1/2 z-10 h-[1.8px] w-[23px] -translate-y-1/2 rounded-full bg-accent-pro"
-          style={{ backgroundColor: THEME_CONFIG.sidebar.activeIndicatorColor }}
+          style={{ backgroundColor: "var(--theme-primary)" }}
         />
       ) : null}
       <motion.span
@@ -165,8 +164,11 @@ export const Sidebar001Item = React.memo(function Sidebar001Item({
           onClick={onClick}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={() => setHovered(null)}
-          style={isActive ? { color: THEME_CONFIG.colors.primary } : undefined}
-          className={cn("relative z-[1] ml-2 flex select-none items-center gap-2 py-1.5 pl-4 text-sm", className)}
+          className={cn(
+            "relative z-[1] ml-2 flex select-none items-center gap-2 py-1.5 pl-4 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] transition-colors",
+            isActive ? "font-medium text-white" : "text-white/70 hover:text-white",
+            className,
+          )}
         >
           <span className="truncate">{label}</span>
           {isNew ? <span className="size-1.5 shrink-0 rounded-full bg-accent-pro" /> : null}
@@ -183,7 +185,7 @@ export function Sidebar001Separator({
   children?: React.ReactNode
   className?: string
 }) {
-  return <div className={cn("mt-2 px-0 py-3.5 text-sm font-medium text-foreground/40", className)}>{children}</div>
+  return <div className={cn("mt-2 px-0 py-3.5 text-xs font-medium text-white/40 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]", className)}>{children}</div>
 }
 
 export function Sidebar001Group({
@@ -221,14 +223,14 @@ export function Sidebar001Group({
         onClick={() => setIsOpen((open) => !open)}
         onMouseEnter={onMouseEnter}
         onMouseLeave={() => setHovered(null)}
-        className="group relative z-[1] flex w-full select-none items-center gap-1.5 py-1.5 pr-2 text-left"
+        className="group relative z-[1] flex w-full select-none items-center gap-1.5 py-1.5 pr-2 text-left drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
       >
-        {icon ? <span className="shrink-0 text-foreground/35 [&_svg]:size-3.5">{icon}</span> : null}
-        <span className="flex-1 text-sm text-foreground/45 transition-colors group-hover:text-foreground/70">{label}</span>
+        {icon ? <span className="shrink-0 text-white/40 [&_svg]:size-3.5">{icon}</span> : null}
+        <span className="flex-1 text-xs text-white/40 transition-colors group-hover:text-white/70">{label}</span>
         <MotionChevron
           size={icon ? 14 : 11}
           strokeWidth={2.5}
-          className="mr-1 shrink-0 text-foreground/35"
+          className="mr-1 shrink-0 text-white/40"
           animate={{ rotate: isOpen ? 90 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
         />
@@ -303,10 +305,9 @@ export function Sidebar001({
       <HoverProvider containerRef={containerRef}>
         <aside
           className={cn(
-            "fixed left-6 top-1/2 z-50 flex h-auto max-h-[80vh] w-60 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-4 shadow-2xl backdrop-blur-md",
+            "fixed left-6 top-1/2 z-50 flex h-auto max-h-[80vh] w-60 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.37)] backdrop-blur-md",
             className,
           )}
-          style={{ backdropFilter: `blur(${THEME_CONFIG.sidebar.blurAmount}px)` }}
         >
           {children}
         </aside>
