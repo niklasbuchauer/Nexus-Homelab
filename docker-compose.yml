@@ -3,9 +3,9 @@ version: '3.8'
 services:
   space-ui:
     build:
-      context: https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git#main
+      context: https://github.com/niklasbuchauer/Nexus-Homelab
       dockerfile: Dockerfile
-    container_name: space-ui-app
+    container_name: nexus-os-app
     ports:
       - "8080:80"   # Maps Port 8080 on your Mac Mini to Port 80 in Docker
     restart: always
