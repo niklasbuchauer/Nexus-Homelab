@@ -2,20 +2,29 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install dependencies safely
+# Install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source code and build for production
+# Copy source code and build
 COPY . .
 RUN npm run build
 
-# Stage 2: Serve with lightweight Nginx
-FROM nginx:alpine
-# If your build folder is 'build' or 'out', change 'dist' below to match!
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Stage 2: Production runner container
+FROM node:20-alpine AS runner
+WORKDIR /app
 
-# Expose port 80 inside the container
-EXPOSE 80
+ENV NODE_ENV=production
 
-CMD ["nginx", "-g", "daemon off;"]
+# Copy necessary build artifacts and dependencies
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+# Expose Next.js default port
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["npm", "start"]
